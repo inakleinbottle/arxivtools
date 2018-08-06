@@ -13,6 +13,6 @@ setup(name='arxivtools',
                       'feedparser',
                       'requests',
                       ],
-      entry_points={'console_scripts' : ['arxivdaily=arxivtools:dailysearch']},
+      entry_points={'console_scripts' : ['arxivdaily=arxivtools:daily_search']},
       )
                       
