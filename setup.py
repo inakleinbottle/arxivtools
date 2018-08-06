@@ -12,6 +12,7 @@ setup(name='arxivtools',
                       'beautifulsoup4',
                       'feedparser',
                       'requests',
-                      ]
+                      ],
+      entry_points={'console_scripts' : ['arxivdaily=arxivtools:dailysearch']},
       )
                       
