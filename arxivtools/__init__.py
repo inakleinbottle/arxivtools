@@ -19,7 +19,7 @@ from arxivtools.rss import ArxivRSSFeed
 logger = logging.getLogger()
 #logger.basicConfig(level=logging.DEBUG)
 log_path = os.path.join(APP_CONF_DIR, 'arxivtools.log')
-log_file_handler = logging.FileHandle(log_path)
+log_file_handler = logging.FileHandler(log_path)
 log_file_handler.setLevel(logging.DEBUG)
 logger.addHandler(log_file_handler)
 
