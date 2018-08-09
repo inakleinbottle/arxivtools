@@ -5,17 +5,16 @@ import logging
 
 import appdirs
 
-from arxivtools.entries import ArxivEntry
-from arxivtools.filter import Filter, SimpleNBFilter
-from arxivtools.rss import ArxivRSSFeed
-
 __all__ = ['ArxivEntry', 'Filter', 'SimpleNBFilter',
            'ArxivRSSFeed', 'daily_search', 'OUTPUT_DIR',
           'APP_CONF_DIR']
 
-
 OUTPUT_DIR = os.path.expanduser(os.path.join('~', 'arxiv'))
 APP_CONF_DIR = appdirs.user_data_dir(__name__, '')
+
+from arxivtools.entries import ArxivEntry
+from arxivtools.filter import Filter, SimpleNBFilter
+from arxivtools.rss import ArxivRSSFeed
 
 logger = logging.getLogger()
 #logger.basicConfig(level=logging.DEBUG)
