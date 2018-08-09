@@ -1,5 +1,6 @@
 
 import re
+import logging
 
 import feedparser
 
@@ -9,6 +10,8 @@ from arxivtools import APP_CONF_DIR
 from arxivtools.filter import get_filter
 from arxivtools.entries import ArxivEntry
 
+
+logger = logging.getLogger(__name__)
 
 AUTHOR_RE = re.compile(r',\s*(?![^()]*\))')
 
@@ -35,7 +38,9 @@ class ArxivRSSFeed:
         self._cache = []
 
     def get_topic(self, topic):
+        logger.debug('Retrieving feed for %s' % topic)
         feed = feedparser.parse(API + topic)
+        logger.info('Found %s entries on topic %s' % (len(feed.entries), topic))
         for entry in feed.entries:
             item = ArxivEntry(tuple(extract_authors(entry.authors)),
                               entry.id.split('/abs/')[-1].strip(),
@@ -49,6 +54,7 @@ class ArxivRSSFeed:
                 yield item
 
     def get_all(self):
+        logger.debug('Retrieving all entries for topics: %s' % ', '.join(self.topics))
         if self._cache:
             yield from iter(self._cache)
         else:
@@ -57,6 +63,7 @@ class ArxivRSSFeed:
 
     def filter_all(self):
         filt = get_filter(APP_CONF_DIR)
+        logger.debug('Filtering results using default filter')
         yield from filter(lambda t: filt.apply(t), self.get_all())
 
 
