@@ -10,7 +10,8 @@ from arxivtools.filter import Filter, SimpleNBFilter
 from arxivtools.rss import ArxivRSSFeed
 
 __all__ = ['ArxivEntry', 'Filter', 'SimpleNBFilter',
-           'ArxivRSSFeed', 'daily_search']
+           'ArxivRSSFeed', 'daily_search', 'OUTPUT_DIR',
+          'APP_CONF_DIR']
 
 
 OUTPUT_DIR = os.path.expanduser(os.path.join('~', 'arxiv'))
