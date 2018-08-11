@@ -1,6 +1,7 @@
 
 import re
 import logging
+import json
 
 import feedparser
 
@@ -36,6 +37,8 @@ class ArxivRSSFeed:
         self.topics = topics
         self._cached_ids = set()
         self._cache = []
+        self.accepted = []
+        self.rejected = []
 
     def get_topic(self, topic):
         logger.debug('Retrieving feed for %s' % topic)
@@ -64,6 +67,16 @@ class ArxivRSSFeed:
     def filter_all(self):
         filt = get_filter(APP_CONF_DIR)
         logger.debug('Filtering results using default filter')
-        yield from filter(lambda t: filt.apply(t), self.get_all())
+        all_entries = self.get_all()
+        for entry, status in zip(all_entries, map(filt.apply, all_entries)):
+            if status:
+                self.accepted.append(entry)
+                yield entry
+            else:
+                self.rejected.append(entry)
+
+    def dump_rejected(self, fd):
+        for item in self.rejected:
+            json.dump(item, fd, sort_keys=True, indent =4)
 
 

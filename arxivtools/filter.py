@@ -22,7 +22,7 @@ class Filter(ABC):
 
     def apply(self, entry):
         result = bool(self.pipeline.predict([entry.abstract]))
-        logger.info(entry.arxiv_id, result)
+        logger.info('Entry %s, result %s' % (entry.arxiv_id, result))
         return result
 
 
@@ -44,7 +44,7 @@ def get_filter(path):
         logger.warning('Default filter not found, creating new filter')
         return new_filter(path)
     else:
-        logger.debug('Loading default filter from %s' %filter_path)
+        logger.debug('Loading default filter from %s' % filter_path)
         with open(filter_path, 'rb') as f:
             return pickle.load(f)
 
