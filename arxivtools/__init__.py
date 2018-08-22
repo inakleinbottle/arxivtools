@@ -21,8 +21,6 @@ if not os.path.exists(OUTPUT_DIR):
 if not os.path.exists(APP_CONF_DIR):
     os.makedirs(APP_CONF_DIR)
 
-from arxivtools.entries import ArxivEntry
-from arxivtools.filter import Filter, SimpleNBFilter
 from arxivtools.rss import ArxivRSSFeed
 
 logger = logging.getLogger('arxivtools')
@@ -45,7 +43,8 @@ def daily_search():
     logger.info('Searching Daily RSS feed for topics: %s' % ', '.join(topics))
     filtered_entries = AF.filter_all()
     for e in filtered_entries:
-        with open(os.path.join(OUTPUT_DIR, e.arxiv_id + '.arx'), 'w') as f:
+        fname = e.arxiv_id.replace('/','-') + '.arx'
+        with open(os.path.join(OUTPUT_DIR, fname), 'w') as f:
             json.dump(e, f)
 
     # Dump the rejected entries to a separate file

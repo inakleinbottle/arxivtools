@@ -5,11 +5,11 @@ import json
 
 import feedparser
 
-from bs4 import BeautifulSoup
+
 
 from arxivtools import APP_CONF_DIR
 from arxivtools.filter import get_filter
-from arxivtools.entries import ArxivEntry
+from arxivtools.entries import ArxivEntry, sanitise
 
 
 logger = logging.getLogger(__name__)
@@ -22,9 +22,7 @@ def extract_authors(authors):
 
 
 
-def sanitise(data):
-    soup = BeautifulSoup(data, features='html5lib')
-    return soup.get_text().replace('\n', ' ').strip()
+
 
 
 
