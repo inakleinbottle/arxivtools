@@ -74,7 +74,8 @@ class AuthorPredictor:
         
 
 class AuthorFilter(Filter):
-    predictor = AuthorPredictor()
+    def __init__(self):
+        self.predictor = AuthorPredictor()
 
     def _select_data(self, entry):
         return entry.authors
