@@ -39,7 +39,6 @@ class PipeLine():
             pass
 
 class Filter(ABC):
-    predictor=None
 
     def _select_data(self, entry):
         return entry
