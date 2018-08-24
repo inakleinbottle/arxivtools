@@ -5,7 +5,7 @@ import feedparser
 import os.path as osp
 
 #from arxivtools import APP_CONF_DIR
-from entries import ArxivEntry, sanitise
+from arxivtools.entries import ArxivEntry, sanitise
 
 import appdirs
 

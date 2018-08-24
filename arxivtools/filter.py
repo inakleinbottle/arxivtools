@@ -27,6 +27,7 @@ class PipeLine():
         res = False
         for filt in self.filters:
             res |= filt.apply(data)
+        logger.info(f'Entry {entry.arxiv_id}, result {res}')
         return res
 
     def add_filter(self, filt):
@@ -39,6 +40,7 @@ class PipeLine():
             pass
 
 class Filter(ABC):
+    predictor = None
 
     def _select_data(self, entry):
         return entry
@@ -51,7 +53,6 @@ class Filter(ABC):
 
     def apply(self, entry):
         result = bool(self.predictor.predict(self._select_data(entry)))
-        logger.info('Entry %s, result %s' % (entry.arxiv_id, result))
         return result
 
 
