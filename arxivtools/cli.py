@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 
-@click.group
+@click.group()
 @click.pass_context
 def arxivtools(ctx):
     '''Command line utilities for arxivtools.'''

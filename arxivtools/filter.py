@@ -27,7 +27,7 @@ class PipeLine():
         res = False
         for filt in self.filters:
             res |= filt.apply(data)
-        logger.info(f'Entry {entry.arxiv_id}, result {res}')
+        logger.info(f'Entry {data.arxiv_id}, result {res}')
         return res
 
     def add_filter(self, filt):
