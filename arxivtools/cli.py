@@ -24,6 +24,50 @@ logger = logging.getLogger(__name__)
 
 
 
+def _load_csv(name):
+    '''Utility function to load csv files from the config dir.'''
+    path = osp.join(APP_CONF_DIR, name + '.csv')
+    ret = []
+    if not osp.exists(path):
+        with open(path, 'w') as f:
+            f.write('')
+    else:
+        with open(osp.join(path), 'r') as f:
+            ret = [item for row in csv.reader(f) for item in row]
+    return ret
+
+def _update_csv(name, data):
+    '''Utility function to update csv file in the config dir.'''
+    path = osp.join(APP_CONF_DIR, name + '.csv')
+    with open(path, 'w') as f:
+        writer = csv.writer(f)
+        writer.writerow(data)
+
+def _manage_data(name, add, remove):
+    '''Manage the data in one of the csv config files.'''
+    data = _load_csv(name)
+            
+    if not add and not remove:
+        logger.debug(f'Listing {name}')
+        click.echo('\n'.join(data))
+    else:
+        logger.info('Modifying {name}.csv')
+        for item in add:
+            if not item in data:
+                data.append(item)
+                logger.info(f'Adding {item}')
+            else:
+                logger.warning(f'Item {item} is already in list {name}.')
+        for item in remove:
+            if item in authors:
+                author.remove(item)
+                logger.info(f'Removing {item}')
+            else:
+                logger.warning(f'Item {item} is not in list {name}.')
+        logger.debug('Updating {name} config file')
+        _update_csv(name, data)
+
+
 @click.group()
 @click.pass_context
 def arxivtools(ctx):
@@ -32,7 +76,7 @@ def arxivtools(ctx):
 
 
 
-@arxivtools.command
+@arxivtools.command()
 @click.pass_context
 def setup(ctx):
     '''Set up arxivtools with a new configuration.
@@ -41,51 +85,41 @@ def setup(ctx):
     and build a new filter for daily searches.
     '''
     logger.info('Running setup')
+    parser = ConfigParser()
+    MAIN_CONFIG = None # Replace me
+    parser.read(MAIN_CONFIG,
+                osp.join(APP_CONF_DIR, 'config.ini'))
 
 
 
 
-
-
-@arxivtools.command
+@arxivtools.command()
 @click.option('-a', '--add', multiple=True,
               help='Add a new author.')
 @click.option('-r', '--remove', multiple=True,
               help='Remove an author.')
 @click.pass_context
-def author(ctx, add, remove):
+def authors(ctx, add, remove):
     '''Show the list of authors currently on your follow list.
 
     List all of the authors currently on your follow list. 
     '''
-    with open(osp(APP_CONF_DIR, 'authors.csv'), 'r') as f:
-        authors = [au for row in csv.reader(f) for au in row]
-            
-    if not add or not remove:
-        logger.debug('Listing authors')
-        click.echo('\n'.join(authors))
-    else:
-        for au in add:
-            if not au in authors:
-                authors.append(au)
-                click.echo(f'Adding {au}')
-                logger.debug(f'Adding {au} to author list.')
-            else:
-                logger.warning(f'Author {au} is already in the author list')
-        for au in remove:
-            if au in authors:
-                author.remove(au)
-                click.echo(f'Removing {au}')
-                logger.debug(f'Removing {au} from author list')
-            else:
-                logger.warning(f'Author {au} is not in the author list.')
+    _manage_data('authors', add, remove)
                     
-                            
-            
+@arxivtools.command()
+@click.option('-a', '--add', multiple=True,
+              help='Add a new topic.')
+@click.option('-r', '--remove', multiple=True,
+              help='Remove an topic.')
+@click.pass_context
+def topics(ctx, add, remove):
+    '''Manage topics for the daily search.'''
+    _manage_data('topics', add, remove)
+        
 
             
 
-@arxivtools.command
+@arxivtools.command()
 @click.pass_context
 def rebuild(ctx):
     '''Rebuild the current filter.

@@ -5,13 +5,12 @@ import logging
 import datetime
 import shutil
 
+
 from tempfile import TemporaryDirectory
 
 import appdirs
 
-__all__ = ['ArxivEntry', 'Filter', 'SimpleNBFilter',
-           'ArxivRSSFeed', 'daily_search', 'OUTPUT_DIR',
-           'APP_CONF_DIR']
+__all__ = ['daily_search', 'OUTPUT_DIR', 'APP_CONF_DIR']
 
 OUTPUT_DIR = os.path.expanduser(os.path.join('~', 'arxiv'))
 APP_CONF_DIR = appdirs.user_data_dir(__name__, '')
@@ -21,11 +20,9 @@ if not os.path.exists(OUTPUT_DIR):
 if not os.path.exists(APP_CONF_DIR):
     os.makedirs(APP_CONF_DIR)
 
-from arxivtools.rss import ArxivRSSFeed
 
 logger = logging.getLogger('arxivtools')
 logger.setLevel(logging.DEBUG)
-#logger.basicConfig(level=logging.DEBUG)
 log_path = os.path.join(APP_CONF_DIR, 'arxivtools.log')
 log_file_handler = logging.FileHandler(log_path)
 log_file_handler.setLevel(logging.DEBUG)
@@ -38,8 +35,8 @@ logger.addHandler(log_file_handler)
 
 def daily_search():
     from arxivtools.rss import ArxivRSSFeed
-    topics = ['math']
-    AF = ArxivRSSFeed(topics)
+    from arxivtools.topics import load_topics
+    AF = ArxivRSSFeed(load_topics())
     logger.info('Searching Daily RSS feed for topics: %s' % ', '.join(topics))
     filtered_entries = AF.filter_all()
     for e in filtered_entries:
