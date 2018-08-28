@@ -5,7 +5,7 @@ import feedparser
 import os.path as osp
 
 #from arxivtools import APP_CONF_DIR
-from arxivtools.entries import ArxivEntry, sanitise
+from arxivtools.entries import make_entry, sanitise
 
 import appdirs
 
@@ -31,10 +31,10 @@ class ArxivAPIRequest:
     def make_request(self):
         feed = feedparser.parse(requests.get(API + self.query).text)
         for entry in feed.entries:
-            yield ArxivEntry(tuple(au.name for au in entry.authors),
-                             entry.id.split('/abs/')[-1].strip(),
-                             entry.title.strip(),
-                             sanitise(entry.summary))
+            yield make_entry({'authors' : tuple(au.name for au in entry.authors),
+                              'arxiv_id' : entry.id.split('/abs/')[-1].strip(),
+                              'title' : entry.title.strip(),
+                              'abstract' : sanitise(entry.summary)})
 
 
 def learn_authors():
