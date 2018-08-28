@@ -5,7 +5,7 @@ from setuptools import setup
 
 
 setup(name='arxivtools',
-      version='0.0.2',
+      version='0.1.0',
       author='InAKleinBottle',
       packages=['arxivtools'],
       install_requires=['scipy',
