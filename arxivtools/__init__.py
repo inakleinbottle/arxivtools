@@ -36,7 +36,8 @@ logger.addHandler(log_file_handler)
 def daily_search():
     from arxivtools.rss import ArxivRSSFeed
     from arxivtools.topics import load_topics
-    AF = ArxivRSSFeed(load_topics())
+    topics = load_topics()
+    AF = ArxivRSSFeed(topics)
     logger.info('Searching Daily RSS feed for topics: %s' % ', '.join(topics))
     filtered_entries = AF.filter_all()
     for e in filtered_entries:

@@ -9,7 +9,7 @@ import feedparser
 
 from arxivtools import APP_CONF_DIR
 from arxivtools.filter import get_filter
-from arxivtools.entries import ArxivEntry, sanitise
+from arxivtools.entries import make_entry, sanitise
 
 
 logger = logging.getLogger(__name__)
@@ -43,10 +43,10 @@ class ArxivRSSFeed:
         feed = feedparser.parse(API + topic)
         logger.info('Found %s entries on topic %s' % (len(feed.entries), topic))
         for entry in feed.entries:
-            item = ArxivEntry(tuple(extract_authors(entry.authors)),
-                              entry.id.split('/abs/')[-1].strip(),
-                              entry.title.strip(),
-                              sanitise(entry.summary))
+            item = make_entry({'authors' : tuple(extract_authors(entry.authors)),
+                               'arxiv_id' : entry.id.split('/abs/')[-1].strip(),
+                               'title' : entry.title.strip(),
+                               'abstract' : sanitise(entry.summary)})
             if item.arxiv_id in self._cached_ids:
                 continue
             else:
